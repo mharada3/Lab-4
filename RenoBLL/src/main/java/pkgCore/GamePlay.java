@@ -126,9 +126,18 @@ public class GamePlay {
 	 * @param player
 	 * @return
 	 */
-	public ArrayList<HandPoker> getBestPossibleHands(Player player) {
-		//FIXME: this should not return null, it should return an array of the best possible hands
-		return null;
+	public ArrayList<HandPoker> getBestPossibleHands(Player player) throws HandException {
+
+		MinMaxPriorityQueue<HandPoker> queue = MinMaxPriorityQueue
+				.orderedBy(HandPoker.hpComparator)
+				.maximumSize(20)
+				.create();
+		for (HandPoker hp : this.getBestHands(player, false)) {
+			queue.add(hp);
+		}
+
+		return new ArrayList<HandPoker>(queue);
+
 	}
 
 	/**
@@ -181,8 +190,7 @@ public class GamePlay {
 	 * @return
 	 */
 	public HandPoker GetPlayersHand(Player player) {
-		//FIXME: this should return back the Player's hand from the hashmap
-		return null;
+		return GameHand.get(player.getPlayerID());
 	}
 
 	/**
@@ -207,8 +215,11 @@ public class GamePlay {
 	 * @param player
 	 * @return
 	 */
-	public boolean isMadeHandBestPossibleHand(Player player) {
-		//FIXME: If the BestMadeHand is in the BestPossibleHands, return true.  The player has the NUTS!
+	public boolean isMadeHandBestPossibleHand(Player player) throws HandException {
+
+		if (getBestMadeHands(player).get(0).getHS().equals(this.getBestPossibleHands(player).get(0).getHS())) {
+			return true;
+		}
 		return false;
 	}
 
@@ -269,12 +280,9 @@ public class GamePlay {
 	 * @return
 	 */
 	public ArrayList<Player> GetGameWinners() {
-		
-		//FIXME: Find all the bestmadehand from each of the players, return an ArrayList of Players that have the best hand.  Two players could tie (so two entries in the ArrayList		
 		ArrayList<Player> WinningPlayers = new ArrayList<Player>();
-		ArrayList<HandPoker> GameHands = new ArrayList<HandPoker>();
-		//FIXME: finish the implmentation
 		return WinningPlayers;
+
 	}
 	
 		
